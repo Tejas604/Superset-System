@@ -11,6 +11,8 @@
     >
 </head>
 <body>
+    <!-- Include the Navbar -->
+    {% include 'navbar.html' %}
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -19,9 +21,36 @@
                         <h3>User Registration</h3>
                     </div>
                     <div class="card-body">
+                        <!-- Form starts here -->
                         <form method="POST" action="">
+
                             {% csrf_token %}
                             
+
+                         <!-- Username -->
+<div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+</div>
+
+<!-- Email -->
+<div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+</div>
+
+<!-- Password -->
+<div class="mb-3">
+    <label for="password1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password1" name="password1" placeholder="Enter your password" required>
+</div>
+
+<!-- Confirm Password -->
+<div class="mb-3">
+    <label for="password2" class="form-label">Confirm Password</label>
+    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm your password" required>
+</div>
+
                             <!-- Full Name -->
                             <div class="mb-3">
                                 <label for="full_name" class="form-label">Full Name</label>
@@ -31,7 +60,14 @@
                             <!-- Work Experience -->
                             <div class="mb-3">
                                 <label for="work_experience" class="form-label">Work Experience</label>
-                                <textarea class="form-control" id="work_experience" name="work_experience" rows="3" placeholder="Describe your work experience"></textarea>
+                                <select class="form-select" id="work_experience" name="work_experience">
+                                <option selected >Select your work experience</option>
+                                <option value="Fresher">Fresher</option>
+                                <option value="1-2 Years">1-2 Years</option>
+                                <option value="3-5 Years">3-5 Years</option>
+                                <option value="5+ Years">5+ Years</option>
+                                </select>
+
                             </div>
 
                             <!-- Projects -->
@@ -46,10 +82,18 @@
                                 <input type="text" class="form-control" id="certifications" name="certifications" placeholder="List your certifications">
                             </div>
 
-                            <!-- Educational Qualifications -->
+                            <!-- Educational Qualification -->
                             <div class="mb-3">
-                                <label for="education" class="form-label">Educational Qualifications</label>
-                                <textarea class="form-control" id="education" name="education" rows="3" placeholder="12th, Degree, etc."></textarea>
+                                <label for="educational_qualification" class="form-label">Educational Qualification</label>
+                                <select class="form-select" id="educational_qualification" name="educational_qualification">
+                                
+                                    <option selected disabled>Select your qualification</option>
+                                    <option value="10th">10th</option>
+                                    <option value="12th">12th</option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Postgraduate">Postgraduate</option>
+                                </select>
+                                <textarea class="form-control mt-2" id="education_description" name="education_description" rows="3" placeholder="Provide details about your qualification"></textarea>
                             </div>
 
                             <!-- Previous Places of Work -->
@@ -85,4 +129,3 @@
     ></script>
 </body>
 </html>
- 
