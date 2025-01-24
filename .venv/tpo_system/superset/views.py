@@ -71,37 +71,192 @@ def home(request):
     return render(request, 'home.html')
 
 
+# def custom_login(request):
+#     if request.method == 'POST':
+#         form = CustomLoginForm(request, data=request.POST)
+#         print("Form is valid:", form.is_valid())
+#         print("Form errors:", form.errors)
+        
+#         if form.is_valid():
+#             email = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             print(f"Email: {email}, Password: {password}")
+            
+#             user = authenticate(request, email=email, password=password)
+#             print("Authenticated user:", user)
+            
+#             if user is not None:
+#                 login(request, user)
+#                 if hasattr(user, 'company'):
+#                     return redirect('company_dashboard')
+#                 else:
+#                     return redirect('student_dashboard')
+#             else:
+#                 messages.error(request, "Invalid email or password.")
+#         else:
+#             messages.error(request, "Invalid form submission.")
+#     else:
+#         form = CustomLoginForm()
+    
+#     context = {'form': form}
+#     return render(request, 'login.html', context)
+
+import logging
+logger = logging.getLogger(__name__)
+# def custom_login(request):
+#     if request.method == 'POST':
+#         form = CustomLoginForm(request, data=request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+
+#             logger.error(f"Login Attempt Details:")
+#             logger.error(f"Email Submitted: {request.POST.get('username')}")
+#             logger.error(f"Form Valid: {form.is_valid()}")
+#             logger.error(f"Form Errors: {form.errors}")
+            
+#             # Verbose authentication debugging
+#             try:
+#                 user = CustomUser.objects.get(email__iexact=email)
+#                 print(f"User found: {user}")
+#                 print(f"Password valid: {user.check_password(password)}")
+#             except CustomUser.DoesNotExist:
+#                 print(f"No user found with email: {email}")
+            
+#             user = authenticate(request, email=email, password=password)
+            
+#             if user is not None:
+#                 login(request, user)
+#                 return redirect('company_dashboard')
+#             else:
+#                 messages.error(request, "Invalid email or password.")
+#         else:
+#             messages.error(request, "Invalid form submission.")
+#     else:
+#         form = CustomLoginForm()
+    
+#     context = {'form': form}
+#     return render(request, 'login.html', context)
+
+
+# import logging
+# logger = logging.getLogger(__name__)
+
+# def custom_login(request):
+#     if request.method == 'POST':
+#         form = CustomLoginForm(request, data=request.POST)
+        
+#         # Comprehensive logging
+#         logger.error(f"Login Attempt Details:")
+#         logger.error(f"Email Submitted: {request.POST.get('username')}")
+#         logger.error(f"Form Valid: {form.is_valid()}")
+#         logger.error(f"Form Errors: {form.errors}")
+        
+#         try:
+#             # Detailed user lookup
+#             email = request.POST.get('username')
+#             password = request.POST.get('password')
+            
+#             logger.error(f"Attempting to find user with email: {email}")
+            
+#             try:
+#                 user = CustomUser.objects.get(email__iexact=email)
+#                 logger.error(f"User Found: {user.email}")
+#                 logger.error(f"User Active: {user.is_active}")
+                
+#                 # Verbose password check
+#                 if user.check_password(password):
+#                     logger.error("Password Verification: SUCCESSFUL")
+#                     login(request, user)
+                    
+#                     if hasattr(user, 'company'):
+#                         return redirect('company_dashboard')
+#                     else:
+#                         return redirect('student_dashboard')
+#                 else:
+#                     logger.error("Password Verification: FAILED")
+#                     messages.error(request, "Invalid password.")
+            
+#             except CustomUser.DoesNotExist:
+#                 logger.error(f"NO USER FOUND with email: {email}")
+#                 messages.error(request, "No user found with this email.")
+        
+#         except Exception as e:
+#             logger.error(f"Unexpected Login Error: {str(e)}")
+#             messages.error(request, "An unexpected error occurred.")
+    
+#     else:
+#         form = CustomLoginForm()
+    
+#     context = {'form': form}
+#     return render(request, 'login.html', context)
+import logging
+
+logger = logging.getLogger(__name__)
 
 def custom_login(request):
     if request.method == 'POST':
         form = CustomLoginForm(request, data=request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('username')  # 'username' field corresponds to the email
-            password = form.cleaned_data.get('password')
-            # Specify the backend when authenticating
-            user = authenticate(request, email=email, password=password, backend='superset.backend.EmailBackend')
-            print(user)  # Check what this prints in your console
+        
+        # Comprehensive logging
+        logger.error(f"Login Attempt Details:")
+        logger.error(f"Email Submitted: {request.POST.get('username')}")
+        logger.error(f"Form Valid: {form.is_valid()}")
+        logger.error(f"Form Errors: {form.errors}")
+        
+        try:
+            # Detailed user lookup
+            email = request.POST.get('username')
+            password = request.POST.get('password')
             
-            if user is not None:
-                login(request, user)
-                # Redirect based on the user type
-                if hasattr(user, 'company'):  # Check if user is a Company
-                    return redirect('company_dashboard')
+            logger.error(f"Attempting to find user or company with email: {email}")
+            
+            # Try finding a CustomUser first
+            try:
+                user = CustomUser.objects.get(email__iexact=email)
+                logger.error(f"User Found: {user.email}")
+                logger.error(f"User Active: {user.is_active}")
+                
+                # Verbose password check for CustomUser
+                if user.check_password(password):
+                    logger.error("Password Verification: SUCCESSFUL")
+                    login(request, user)
+                    return redirect('student_dashboard')  # Redirect to student dashboard
                 else:
-                    return redirect('student_dashboard')
-            else:
-                messages.error(request, "Invalid email or password.")
-        else:
-            # Debug statement to print form errors
-            print(form.errors)
-            messages.error(request, "Invalid form submission.")
+                    logger.error("Password Verification: FAILED")
+                    messages.error(request, "Invalid password.")
+            
+            except CustomUser.DoesNotExist:
+                logger.error(f"NO USER FOUND with email: {email}")
+                
+                # Try finding a Company if not a CustomUser
+                try:
+                    company = Company.objects.get(email__iexact=email)
+                    logger.error(f"Company Found: {company.name}")
+                    logger.error(f"Company Active: {company.is_active}")
+                    
+                    # Verbose password check for Company
+                    if company.check_password(password):
+                        logger.error("Password Verification: SUCCESSFUL")
+                        login(request, company)
+                        return redirect('company_dashboard')  # Redirect to company dashboard
+                    else:
+                        logger.error("Password Verification: FAILED")
+                        messages.error(request, "Invalid password.")
+                except Company.DoesNotExist:
+                    logger.error(f"NO COMPANY FOUND with email: {email}")
+                    messages.error(request, "No user or company found with this email.")
+        
+        except Exception as e:
+            logger.error(f"Unexpected Login Error: {str(e)}")
+            messages.error(request, "An unexpected error occurred.")
+    
     else:
         form = CustomLoginForm()
-
-    context = {
-        'form': form
-    }
+    
+    context = {'form': form}
     return render(request, 'login.html', context)
+
 
 # Forms for editing and uploading
 class UserEditForm(forms.ModelForm):

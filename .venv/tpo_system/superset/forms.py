@@ -133,6 +133,26 @@ class CustomLoginForm(AuthenticationForm):
     username = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))    
 
+    def clean(self):
+        email = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if email and password:
+            try:
+                user = CustomUser.objects.get(email__iexact=email)
+                if not user.check_password(password):
+                    raise forms.ValidationError(
+                        "Invalid password for the given email."
+                    )
+            except CustomUser.DoesNotExist:
+                raise forms.ValidationError(
+                    "No user found with this email address."
+                )
+
+        return self.cleaned_data
+
+ 
+
     
     
 class CompanyDashboardForm(forms.ModelForm):
