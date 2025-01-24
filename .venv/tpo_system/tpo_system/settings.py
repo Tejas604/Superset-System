@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-+59127buik9_o895y60uudmw!@(v0+m)y3+ub31sthvu6ow7*3
 DEBUG = True
 
 AUTH_USER_MODEL = 'superset.CustomUser'
+
 
 
 ALLOWED_HOSTS = []
@@ -52,6 +53,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+AUTHENTICATION_BACKENDS = [
+    'superset.backend.EmailBackend',  # Replace 'yourapp' with the actual name of your app
+    'django.contrib.auth.backends.ModelBackend',  # Keep this for the default behavior
 ]
 
 ROOT_URLCONF = 'tpo_system.urls'
@@ -117,10 +122,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOGIN_URL = 'login' 
+LOGOUT_REDIRECT_URL = 'home' 
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = 'static/'
 
 # Default primary key field type
