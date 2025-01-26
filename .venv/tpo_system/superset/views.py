@@ -220,6 +220,7 @@ def custom_login(request):
                 # Verbose password check for CustomUser
                 if user.check_password(password):
                     logger.error("Password Verification: SUCCESSFUL")
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
                     login(request, user)
                     return redirect('student_dashboard')  # Redirect to student dashboard
                 else:
@@ -238,6 +239,7 @@ def custom_login(request):
                     # Verbose password check for Company
                     if company.check_password(password):
                         logger.error("Password Verification: SUCCESSFUL")
+                        company.backend = 'superset.backend.EmailBackend'
                         login(request, company)
                         return redirect('company_dashboard')  # Redirect to company dashboard
                     else:

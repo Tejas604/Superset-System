@@ -15,7 +15,7 @@ urlpatterns = [
     path('company-dashboard/', views.company_dashboard, name='company_dashboard'),
     path('schedule_test/<int:student_id>/', views.schedule_test, name='schedule_test'),
     path('upload_answer_sheet/<int:test_id>/', views.upload_answer_sheet, name='upload_answer_sheet'),
-    # path('create_test/', views.company_dashboard, name='create_test'),
+    path('create_test/', views.company_dashboard, name='create_test'),
     
 ]
 if settings.DEBUG:  # Serve media files only in development
